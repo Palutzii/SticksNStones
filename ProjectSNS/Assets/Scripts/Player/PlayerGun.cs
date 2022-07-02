@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerGun : MonoBehaviour{
     [SerializeField] Transform firingPoint;
-    [SerializeField] GameObject projectilePrefab;
     [SerializeField] float firingSpeed;
 
     public static PlayerGun Instance;
@@ -15,8 +14,10 @@ public class PlayerGun : MonoBehaviour{
 
     public void Shoot(){
         if (_lastTimeShot + firingSpeed <= Time.time){
+
+            Projectile _projectile = ProjectilePool.Instance.Instantiate(firingPoint.position, firingPoint.rotation);
+            _projectile.Move();
             _lastTimeShot = Time.time;
-            Instantiate(projectilePrefab, firingPoint.position, firingPoint.rotation);
         }
         
     }

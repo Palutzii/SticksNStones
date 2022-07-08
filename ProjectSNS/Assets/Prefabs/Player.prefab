@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 5707664072762879986}
   - component: {fileID: 5707664072762879989}
   - component: {fileID: 5707664072762879988}
-  - component: {fileID: 5707664072762879987}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -130,20 +129,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5707664072762879987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5707664072762879990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13b3ad1d3ea127046b93b76bd13258be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firingPoint: {fileID: 5707664071641622454}
-  firingSpeed: 0.2
 --- !u!1 &5707664073271344360
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,9 +142,11 @@ GameObject:
   - component: {fileID: 5707664073271344374}
   - component: {fileID: 5707664073271344361}
   - component: {fileID: 5707664073271344373}
+  - component: {fileID: 780010269}
+  - component: {fileID: 780010275}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -178,7 +165,7 @@ Transform:
   m_Children:
   - {fileID: 5707664072762879991}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5707664073271344375
 MeshFilter:
@@ -257,3 +244,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
+--- !u!114 &780010269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5707664073271344360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63208402347556d42ac9ea5329e9c03c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 8335505444470523777, guid: d880d703e2723b1418e7cfdc5c1e1029, type: 3}
+  firePoint: {fileID: 5707664071641622454}
+  TimeBetweenShoots: 0.2
+--- !u!114 &780010275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5707664073271344360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa2931aa86d54e4d93170c5b3000aa71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

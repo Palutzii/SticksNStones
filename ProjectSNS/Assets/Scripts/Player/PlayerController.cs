@@ -30,9 +30,11 @@ public class PlayerController : MonoBehaviour{
     }
 
     void HandleShootInput(){
-        if (Input.GetButton("Fire1")){
-            //Shoot
-            PlayerGun.Instance.Shoot();
-        }
+        // if (Input.GetButton("Fire1")){
+        //     //Shoot
+        //     PlayerGun.Instance.Shoot();
+        // }
+        
+        PlayerShoot.Instance.ShootInput();
     }
 }

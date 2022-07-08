@@ -21,13 +21,12 @@ namespace SticksNStonesServer;
 
                 if (match == null){
                     Console.WriteLine("Starting new Match for Player. Waiting for Second Player");
-                    match = new SticksNStonesMatch{
-                        player1 = tcpClient
-                    };
+                    match = new SticksNStonesMatch();
+                    match.InitPlayer1(tcpClient);
                 }
                 else{
                     Console.WriteLine("Assigning PLayer to existing Match. Starting Match");
-                    match.player2 = tcpClient;
+                    match.InitPlayer2(tcpClient);
                     new Thread(match.Start).Start();
                     match = null;
                 }

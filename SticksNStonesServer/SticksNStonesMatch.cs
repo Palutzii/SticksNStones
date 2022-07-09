@@ -1,66 +1,59 @@
 ﻿using System;
-using System.IO;
 using System.Net.Sockets;
-using System.Text.Json;
-using System.Threading;
-using System.Xml.Schema;
 using SticksNStonesServer.Messages;
 
 namespace SticksNStonesServer;
 
-public class SticksNStonesMatch{
-    public TcpClient Player1{ get; private set; }
-    public TcpClient Player2{ get; private set; }
 
-    public MatchInfo matchInfo = new MatchInfo();
+/// <summary>
+/// Holds the Match info for a PVP Match.
+/// As well as both player's connections.
+/// </summary>
+public class SticksNStonesMatch{
+    static int _id;
+    public int Id{ get; }
+    Connection? Player1{ get; set; }
+    Connection? Player2{ get; set; }
+
+    readonly MatchInfo matchInfo = new();
+
+    public SticksNStonesMatch(){
+        Id = ++_id;
+    }
 
     public void InitPlayer1(TcpClient client){
-        Player1 = client;
-        
-        // start reading thread
-        new Thread(() => {
-            
-            var streamReader = new StreamReader(client.GetStream());
-            var options = new JsonSerializerOptions(){
-                IncludeFields = true
-            };
-            while (true){
-                //block the reading thread until a whole line of information has arrived.
-                string json = streamReader.ReadLine();
-                var loginMessage = JsonSerializer.Deserialize<LoginMessage>(json, options);
-                matchInfo.player1 = new PlayerInfo(){
-                    name = loginMessage.playerName
-                };
-            }
-        }).Start();
+        Player1 = new Connection(client,this,matchInfo.player1);
     }
     public void InitPlayer2(TcpClient client){
-        Player2 = client;
-        
-        // start reading thread
-        new Thread(() => {
-            
-            var streamReader = new StreamReader(client.GetStream());
-            var options = new JsonSerializerOptions(){
-                IncludeFields = true
-            };
-            while (true){
-                //block the reading thread until a whole line of information has arrived.
-                string json = streamReader.ReadLine();
-                var loginMessage = JsonSerializer.Deserialize<LoginMessage>(json, options);
-                matchInfo.player2 = new PlayerInfo(){
-                    name = loginMessage.playerName
-                };
-            }
-        }).Start();
+        Player2 = new Connection(client,this,matchInfo.player2);
     }
+    
+    /// <summary>
+    /// Helper method to synchronize all players.
+    /// </summary>
+    public void DistributeMatchInfo(){
+        var message = new MatchInfoMessage(){
+            matchInfo = this.matchInfo
+        };
+        Player1?.SendMessage(message);
+        Player2?.SendMessage(message);
+    }
+    
+    /// <summary>
+    /// Main Game Loop
+    /// </summary>
     public void Start(){
         while (true){
             if (!matchInfo.isStarted){
-                if (matchInfo.player2 != null && matchInfo.player1 != null){
+                if (matchInfo.player2.isReady && matchInfo.player1.isReady){
                     // start game
                     Console.WriteLine("Start Game");
+                    matchInfo.isStarted = true;
+                    DistributeMatchInfo();
                 }
+            }
+            else{
+                // TODO: check for winner (e.g 10 score)
             }
         }
     }

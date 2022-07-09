@@ -4,6 +4,11 @@ using System.Net.Sockets;
 using System.Threading;
 
 namespace SticksNStonesServer;
+
+    /// <summary>
+    /// Matchmaking class. It assigns newly connected players.
+    /// To SticksNStoneMatch instances.
+    /// </summary>
     public static class Program{
         public static void Main(){
             // start listening to new connections on the given socket

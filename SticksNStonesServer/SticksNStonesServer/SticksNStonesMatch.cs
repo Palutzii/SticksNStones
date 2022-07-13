@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Sockets;
-using SticksNStonesServer.Messages;
+using StickNStonesShared.StickNStonesShared.Messages;
+using StickNStonesShared.StickNStonesShared.Model;
+using SticksNStonesServer.Networking;
 
 namespace SticksNStonesServer;
 

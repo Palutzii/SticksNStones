@@ -3,10 +3,10 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading;
-using SticksNStonesServer.Messages;
-using SticksNStonesServer.Model;
+using StickNStonesShared.StickNStonesShared.Messages;
+using StickNStonesShared.StickNStonesShared.Model;
 
-namespace SticksNStonesServer;
+namespace SticksNStonesServer.Networking;
 
 /// <summary>
 /// Contains all code for one player's connection
@@ -21,7 +21,9 @@ public class Connection{
     readonly JsonSerializerOptions options = new(){
         IncludeFields = true
     };
-
+    
+    // see, what code can be shared between client and server
+    // and  what code is individual to each other
     public Connection(TcpClient client, SticksNStonesMatch match, PlayerInfo playerInfo){
         _match = match;
         _playerInfo = playerInfo;

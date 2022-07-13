@@ -1,4 +1,5 @@
-using Messages;
+using StickNStonesShared.StickNStonesShared.Messages;
+using StickNStonesShared.StickNStonesShared.Networking;
 using TMPro;
 using UnityEngine;
 
@@ -9,11 +10,11 @@ public class Game : MonoBehaviour{
     public TextMeshProUGUI player2Score;
     
     void Awake(){
-        Connection.Instance.matchInfoMessageReceived += OnMatchInfoMessageReceived;
+        ConnectionSingleton.Instance.Connection.matchInfoMessageReceived += OnMatchInfoMessageReceived;
     }
 
     void OnDestroy(){
-        Connection.Instance.matchInfoMessageReceived -= OnMatchInfoMessageReceived;
+        ConnectionSingleton.Instance.Connection.matchInfoMessageReceived -= OnMatchInfoMessageReceived;
 
     }
 

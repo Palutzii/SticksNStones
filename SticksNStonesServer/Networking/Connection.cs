@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading;
 using SticksNStonesServer.Messages;
+using SticksNStonesServer.Model;
 
 namespace SticksNStonesServer;
 

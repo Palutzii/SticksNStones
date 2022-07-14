@@ -28,18 +28,16 @@ public class ClientConnection{
         Connection.MessageReceived += OnMessageReceived;
     }
     
-    void OnMessageReceived(string json){
-        if (_playerInfo.isReady){
-                // then, it should be a score message
-                // TODO: increase score by one _playerInfo.score++;
-        }
-        else{ 
-            // if the player is not ready yet, we expect a LoginMessage.
-            var loginMessage = new DotNetJson().Deserialize<LoginMessage>(json); 
+    void OnMessageReceived(ObjectHolder holder){
+        if (holder is ObjectHolder<LoginMessage> loginHolder){
+            var loginMessage = loginHolder.obj; 
             Console.WriteLine($"[#{_match.Id}] Player '{loginMessage.playerName}' logged in.");
             Connection.PlayerName = loginMessage.playerName;
             _playerInfo.name = loginMessage.playerName; 
             _playerInfo.isReady = true;
+        }
+        else if (holder is ObjectHolder<MatchInfoMessage> matchInfoHolder){
+            Console.WriteLine("The server is not supposed to receive MatchInfoMessages.");
         }
         _match.DistributeMatchInfo();
     }

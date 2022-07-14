@@ -29,10 +29,11 @@ namespace Networking{
             });
         }
 
-        void OnMessageReceived(string json){
-            // TODO implement client logic
-            var matchInfo = JsonUtility.FromJson<MatchInfoMessage>(json);
-            Debug.Log(json);
+        void OnMessageReceived(ObjectHolder holder){
+            if (holder is ObjectHolder<MatchInfoMessage> matchInfoHolder){
+                var matchInfo = matchInfoHolder.obj;
+                Debug.Log(matchInfo);
+            }
         }
     
     

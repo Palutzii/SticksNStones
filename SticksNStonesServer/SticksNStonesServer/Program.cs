@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using SticksNStonesServer.Adapter;
 using SticksNStonesServer.Model;
 
 namespace SticksNStonesServer;
@@ -11,7 +13,19 @@ namespace SticksNStonesServer;
     /// To SticksNStoneMatch instances.
     /// </summary>
     public static class Program{
+
+        public class Player{
+            public string name;
+        }
+
+        public class Enemy{
+            public string name;
+        }
+
+        
+        
         public static void Main(){
+            
             // start listening to new connections on the given socket
             var tcpListener = new TcpListener(IPAddress.Any, 12244);
             tcpListener.Start();

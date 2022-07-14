@@ -7,46 +7,35 @@ using StickNStonesShared.StickNStonesShared.Messages;
 
 namespace StickNStonesShared.StickNStonesShared.Networking{
         public class Connection{
+                public event Action<string> MessageReceived;
+                
                 readonly ILogger _logger;
-                readonly IJson _json;
+                readonly IJson _json; 
+                readonly StreamWriter _streamWriter;
+                TcpClient Client{ get;}
+                public string PlayerName{ get; set; }
 
-                public event Action<MatchInfoMessage> matchInfoMessageReceived;
-                static Connection _instance;
-                StreamWriter _streamWriter;
-
-                public Connection(ILogger logger, IJson json){
+                public Connection(ILogger logger, IJson json, TcpClient client) {
                         _logger = logger;
                         _json = json;
-                }
-
-                public void Init(TcpClient client, string playerName){
-                        this.Client = client;
-                        this.PlayerName = playerName;
+                        Client = client;
                         this._streamWriter = new StreamWriter(client.GetStream());
-                        new StreamReader(client.GetStream());
-                        new Thread(ReadPlayer).Start();
-                        SendMessage(new LoginMessage{
-                                playerName = playerName
-                        });
+                        new Thread(ReceiveMessages).Start();
                 }
-
-                TcpClient Client{ get; set; }
-                string PlayerName{ get; set; }
-
                 public void SendMessage<T>(T message){
                         _streamWriter.WriteLine(_json.Serialize(message));
                         _streamWriter.Flush();
                 }
         
-                void ReadPlayer(){
+                void ReceiveMessages(){
         
                         var streamReader = new StreamReader(Client.GetStream());
                         while (true){
                                 //block the reading thread until a whole line of information has arrived.
                                 string? json = streamReader.ReadLine();
-                                var matchInfo = _json.Deserialize<MatchInfoMessage>(json);
-                                matchInfoMessageReceived?.Invoke(matchInfo);
-                                _logger.Log(json);
+                                if (json != null){
+                                        MessageReceived?.Invoke(json);
+                                }
                         }
                 }
         }

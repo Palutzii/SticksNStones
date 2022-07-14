@@ -10,11 +10,10 @@ public class WaitGame : MonoBehaviour{
     public TextMeshProUGUI player2Name;
 
     void Awake(){
-        ConnectionSingleton.Instance.Connection.matchInfoMessageReceived += OnMatchInfoMessageReceived;
+        
     }
 
     void OnDestroy(){
-        ConnectionSingleton.Instance.Connection.matchInfoMessageReceived -= OnMatchInfoMessageReceived;
 
     }
 

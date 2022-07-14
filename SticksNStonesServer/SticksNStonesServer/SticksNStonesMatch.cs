@@ -14,8 +14,8 @@ namespace SticksNStonesServer;
 public class SticksNStonesMatch{
     static int _id;
     public int Id{ get; }
-    Connection? Player1{ get; set; }
-    Connection? Player2{ get; set; }
+    ClientConnection? Player1{ get; set; }
+    ClientConnection? Player2{ get; set; }
 
     readonly MatchInfo matchInfo = new();
 
@@ -24,10 +24,10 @@ public class SticksNStonesMatch{
     }
 
     public void InitPlayer1(TcpClient client){
-        Player1 = new Connection(client,this,matchInfo.player1);
+        Player1 = new ClientConnection(client,this,matchInfo.player1);
     }
     public void InitPlayer2(TcpClient client){
-        Player2 = new Connection(client,this,matchInfo.player2);
+        Player2 = new ClientConnection(client,this,matchInfo.player2);
     }
     
     /// <summary>
@@ -37,8 +37,8 @@ public class SticksNStonesMatch{
         var message = new MatchInfoMessage(){
             matchInfo = this.matchInfo
         };
-        Player1?.SendMessage(message);
-        Player2?.SendMessage(message);
+        Player1?.Connection.SendMessage(message);
+        Player2?.Connection.SendMessage(message);
     }
     
     /// <summary>

@@ -10,12 +10,11 @@ public class Game : MonoBehaviour{
     public TextMeshProUGUI player2Score;
     
     void Awake(){
-        ConnectionSingleton.Instance.Connection.matchInfoMessageReceived += OnMatchInfoMessageReceived;
+        
     }
 
     void OnDestroy(){
-        ConnectionSingleton.Instance.Connection.matchInfoMessageReceived -= OnMatchInfoMessageReceived;
-
+        
     }
 
     void OnMatchInfoMessageReceived(MatchInfoMessage obj){

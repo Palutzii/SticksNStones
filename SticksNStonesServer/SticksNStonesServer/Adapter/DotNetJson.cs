@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using StickNStonesShared.StickNStonesShared.Interfaces;
 
-namespace SticksNStonesServer;
+namespace SticksNStonesServer.Adapter;
 
 public class DotNetJson : IJson{
     

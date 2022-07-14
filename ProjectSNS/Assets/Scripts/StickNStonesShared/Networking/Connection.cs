@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using StickNStonesShared.StickNStonesShared.Interfaces;
-using StickNStonesShared.StickNStonesShared.Messages;
 
 namespace StickNStonesShared.StickNStonesShared.Networking{
         public class Connection{

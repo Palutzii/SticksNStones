@@ -1,7 +1,7 @@
 ﻿using System;
 using StickNStonesShared.StickNStonesShared.Interfaces;
 
-namespace SticksNStonesServer;
+namespace SticksNStonesServer.Adapter;
 
 public class ConsoleLogger : ILogger{
     public void Log(string message){

@@ -4,7 +4,7 @@ using StickNStonesShared.StickNStonesShared.Messages;
 using StickNStonesShared.StickNStonesShared.Model;
 using SticksNStonesServer.Networking;
 
-namespace SticksNStonesServer;
+namespace SticksNStonesServer.Model;
 
 
 /// <summary>

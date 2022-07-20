@@ -25,7 +25,7 @@ public class ClientConnection{
         Connection = new Connection(new ConsoleLogger(), new DotNetJson(), client);
         _match = match;
         _playerInfo = playerInfo;
-        Connection.Subscribe<LoginMessage>(OnMessageReceived);
+        Connection.Broker.Subscribe<LoginMessage>(OnMessageReceived);
     }
 
     void OnMessageReceived(LoginMessage loginMessage){

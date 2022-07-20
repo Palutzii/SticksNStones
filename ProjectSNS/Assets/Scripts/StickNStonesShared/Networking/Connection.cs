@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -15,19 +14,20 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                         this.type = GetType().FullName;
                 }
         }
-        
-        
+
+
         public class Connection{
                 
                 readonly ILogger _logger;
                 readonly IJson _json; 
                 readonly StreamWriter _streamWriter;
-                readonly Dictionary<Type, Delegate> _listeners = new();
 
                 TcpClient Client{ get;}
                 public string PlayerName{ get; set; }
+                public Broker Broker{ get; }
 
-                public Connection(ILogger logger, IJson json, TcpClient client) {
+                public Connection(ILogger logger, IJson json, TcpClient client){
+                        Broker = new Broker();
                         _logger = logger;
                         _json = json;
                         Client = client;
@@ -64,33 +64,12 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                                         _logger.Log($"Unsupported Message of Type {holder.type} received. Ignoring.");
                                         continue;
                                 }
+                                var message = _json.Deserialize(json, type) as MessageBase;
+                                Broker.InvokeSubscribers(type, message);
                                 
-                                var objectHolder = _json.Deserialize(json, type) as MessageBase;
-                                if (_listeners.TryGetValue(type,out var listener)){
-                                        listener.DynamicInvoke(objectHolder);
-                                }
                         }
                 }
 
-                public void Subscribe<TMessage>(Action<TMessage> onMessageReceived) 
-                        where TMessage : MessageBase
-                {
-                        if (_listeners.TryGetValue(typeof(TMessage),out var del)){
-                                _listeners[typeof(TMessage)] = Delegate.Combine(del,onMessageReceived);
-                        }
-                        else{
-                                
-                                _listeners[typeof(TMessage)] = onMessageReceived;
-                        }
-                        
-                }
-                public void UnSubscribe<TMessage>(Action<TMessage> onMessageReceived) 
-                        where TMessage : MessageBase
-                {
-                        if (_listeners.TryGetValue(typeof(TMessage),out var del)){
-                                _listeners[typeof(TMessage)] = Delegate.Remove(del,onMessageReceived);
-                        }
-                        
-                }
+                
         }
 }

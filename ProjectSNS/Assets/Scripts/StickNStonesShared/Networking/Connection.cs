@@ -51,20 +51,46 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                                         continue;
                                 }
                                 var holder = _json.Deserialize<MessageBase>(json);
+
+                                if (holder == null){
+                                        _logger.Log($"Invalid message received: {json}");
+                                        continue;
+                                }
+                                
                                 var type = AppDomain.CurrentDomain.GetAssemblies()
                                         .Select(assembly => assembly.GetType(holder.type))
-                                        .Single(type => type != null);
+                                        .SingleOrDefault(type => type != null);
+                                if (type == null){
+                                        _logger.Log($"Unsupported Message of Type {holder.type} received. Ignoring.");
+                                        continue;
+                                }
+                                
                                 var objectHolder = _json.Deserialize(json, type) as MessageBase;
-                                var listener = _listeners[type];
-                                listener.DynamicInvoke(objectHolder);
+                                if (_listeners.TryGetValue(type,out var listener)){
+                                        listener.DynamicInvoke(objectHolder);
+                                }
                         }
                 }
 
                 public void Subscribe<TMessage>(Action<TMessage> onMessageReceived) 
                         where TMessage : MessageBase
-
                 {
-                        _listeners[typeof(TMessage)] = onMessageReceived;
+                        if (_listeners.TryGetValue(typeof(TMessage),out var del)){
+                                _listeners[typeof(TMessage)] = Delegate.Combine(del,onMessageReceived);
+                        }
+                        else{
+                                
+                                _listeners[typeof(TMessage)] = onMessageReceived;
+                        }
+                        
+                }
+                public void UnSubscribe<TMessage>(Action<TMessage> onMessageReceived) 
+                        where TMessage : MessageBase
+                {
+                        if (_listeners.TryGetValue(typeof(TMessage),out var del)){
+                                _listeners[typeof(TMessage)] = Delegate.Remove(del,onMessageReceived);
+                        }
+                        
                 }
         }
 }

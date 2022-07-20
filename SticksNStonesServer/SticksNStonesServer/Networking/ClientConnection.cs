@@ -28,8 +28,7 @@ public class ClientConnection{
         Connection.Subscribe<LoginMessage>(OnMessageReceived);
     }
 
-    void OnMessageReceived(ObjectHolder<LoginMessage> loginHolder){
-        var loginMessage = loginHolder.obj;
+    void OnMessageReceived(LoginMessage loginMessage){
         Console.WriteLine($"[#{_match.Id}] Player '{loginMessage.playerName}' logged in.");
         Connection.PlayerName = loginMessage.playerName;
         _playerInfo.name = loginMessage.playerName; 

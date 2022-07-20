@@ -29,8 +29,7 @@ namespace Networking{
             });
         }
 
-        void OnMessageReceived(ObjectHolder<MatchInfoMessage> matchInfoHolder){
-            var matchInfo = matchInfoHolder.obj;
+        void OnMessageReceived(MatchInfoMessage matchInfo){
             Debug.Log(matchInfo);
             
         }

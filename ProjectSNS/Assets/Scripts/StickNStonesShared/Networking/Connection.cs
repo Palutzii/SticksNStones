@@ -8,21 +8,15 @@ using StickNStonesShared.StickNStonesShared.Interfaces;
 
 namespace StickNStonesShared.StickNStonesShared.Networking{
 
-        public class ObjectHolder{
+        public class MessageBase{
                 public string type;
 
-                public ObjectHolder(string type){
-                        this.type = type;
+                public MessageBase(){
+                        this.type = GetType().FullName;
                 }
         }
-
-        public class ObjectHolder<T> : ObjectHolder{
-                public T obj;
-
-                public ObjectHolder(T obj) : base(typeof(ObjectHolder<T>).FullName){
-                        this.obj = obj;
-                }
-        }
+        
+        
         public class Connection{
                 
                 readonly ILogger _logger;
@@ -40,8 +34,10 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                         this._streamWriter = new StreamWriter(client.GetStream());
                         new Thread(ReceiveMessages).Start();
                 }
-                public void SendMessage<T>(T message){
-                        _streamWriter.WriteLine(_json.Serialize(new ObjectHolder<T>(message)));
+                public void SendMessage<TMessage>(TMessage message)
+                where TMessage : MessageBase
+                {
+                        _streamWriter.WriteLine(_json.Serialize(message));
                         _streamWriter.Flush();
                 }
         
@@ -54,18 +50,21 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                                 if (json == null){
                                         continue;
                                 }
-                                var holder = _json.Deserialize<ObjectHolder>(json);
+                                var holder = _json.Deserialize<MessageBase>(json);
                                 var type = AppDomain.CurrentDomain.GetAssemblies()
                                         .Select(assembly => assembly.GetType(holder.type))
                                         .Single(type => type != null);
-                                var objectHolder = _json.Deserialize(json, type) as ObjectHolder;
+                                var objectHolder = _json.Deserialize(json, type) as MessageBase;
                                 var listener = _listeners[type];
                                 listener.DynamicInvoke(objectHolder);
                         }
                 }
 
-                public void Subscribe<T>(Action<ObjectHolder<T>> onMessageReceived){
-                        _listeners[typeof(ObjectHolder<T>)] = onMessageReceived;
+                public void Subscribe<TMessage>(Action<TMessage> onMessageReceived) 
+                        where TMessage : MessageBase
+
+                {
+                        _listeners[typeof(TMessage)] = onMessageReceived;
                 }
         }
 }

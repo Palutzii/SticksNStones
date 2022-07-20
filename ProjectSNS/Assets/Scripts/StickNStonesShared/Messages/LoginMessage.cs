@@ -1,11 +1,10 @@
 ﻿using System;
+using StickNStonesShared.StickNStonesShared.Networking;
 
 namespace StickNStonesShared.StickNStonesShared.Messages{
     
     [Serializable]
-    public class LoginMessage{
+    public class LoginMessage : MessageBase{
         public string playerName;
-        public string id;
-        public int score;
     }
 }

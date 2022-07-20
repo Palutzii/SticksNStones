@@ -22,20 +22,17 @@ namespace Networking{
             var client = new TcpClient();
             client.Connect(IPAddress.Loopback, 12244);
             this.Connection = new Connection(new UnityLogger(), new UnityJson(), client);
-            this.Connection.MessageReceived += OnMessageReceived;
+            this.Connection.Subscribe<MatchInfoMessage>(OnMessageReceived);
             this.Connection.PlayerName = playerName;
             this.Connection.SendMessage(new LoginMessage{
                 playerName = playerName
             });
         }
 
-        void OnMessageReceived(ObjectHolder holder){
-            if (holder is ObjectHolder<MatchInfoMessage> matchInfoHolder){
-                var matchInfo = matchInfoHolder.obj;
-                Debug.Log(matchInfo);
-            }
+        void OnMessageReceived(ObjectHolder<MatchInfoMessage> matchInfoHolder){
+            var matchInfo = matchInfoHolder.obj;
+            Debug.Log(matchInfo);
+            
         }
-    
-    
     }
 }

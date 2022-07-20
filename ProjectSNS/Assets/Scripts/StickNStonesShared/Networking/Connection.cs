@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using StickNStonesShared.StickNStonesShared.Interfaces;
-using StickNStonesShared.StickNStonesShared.Messages;
 
 namespace StickNStonesShared.StickNStonesShared.Networking{
 
@@ -24,11 +24,12 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                 }
         }
         public class Connection{
-                public event Action<ObjectHolder> MessageReceived;
                 
                 readonly ILogger _logger;
                 readonly IJson _json; 
                 readonly StreamWriter _streamWriter;
+                readonly Dictionary<Type, Delegate> _listeners = new();
+
                 TcpClient Client{ get;}
                 public string PlayerName{ get; set; }
 
@@ -58,8 +59,13 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                                         .Select(assembly => assembly.GetType(holder.type))
                                         .Single(type => type != null);
                                 var objectHolder = _json.Deserialize(json, type) as ObjectHolder;
-                                MessageReceived?.Invoke(objectHolder);
+                                var listener = _listeners[type];
+                                listener.DynamicInvoke(objectHolder);
                         }
+                }
+
+                public void Subscribe<T>(Action<ObjectHolder<T>> onMessageReceived){
+                        _listeners[typeof(ObjectHolder<T>)] = onMessageReceived;
                 }
         }
 }

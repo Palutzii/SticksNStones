@@ -25,20 +25,15 @@ public class ClientConnection{
         Connection = new Connection(new ConsoleLogger(), new DotNetJson(), client);
         _match = match;
         _playerInfo = playerInfo;
-        Connection.MessageReceived += OnMessageReceived;
+        Connection.Subscribe<LoginMessage>(OnMessageReceived);
     }
-    
-    void OnMessageReceived(ObjectHolder holder){
-        if (holder is ObjectHolder<LoginMessage> loginHolder){
-            var loginMessage = loginHolder.obj; 
-            Console.WriteLine($"[#{_match.Id}] Player '{loginMessage.playerName}' logged in.");
-            Connection.PlayerName = loginMessage.playerName;
-            _playerInfo.name = loginMessage.playerName; 
-            _playerInfo.isReady = true;
-        }
-        else if (holder is ObjectHolder<MatchInfoMessage> matchInfoHolder){
-            Console.WriteLine("The server is not supposed to receive MatchInfoMessages.");
-        }
+
+    void OnMessageReceived(ObjectHolder<LoginMessage> loginHolder){
+        var loginMessage = loginHolder.obj;
+        Console.WriteLine($"[#{_match.Id}] Player '{loginMessage.playerName}' logged in.");
+        Connection.PlayerName = loginMessage.playerName;
+        _playerInfo.name = loginMessage.playerName; 
+        _playerInfo.isReady = true;
         _match.DistributeMatchInfo();
     }
 }

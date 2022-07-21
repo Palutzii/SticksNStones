@@ -30,7 +30,7 @@ namespace SticksNStonesServer;
             var tcpListener = new TcpListener(IPAddress.Any, 12244);
             tcpListener.Start();
 
-            PlayerDataBase dataBase = new PlayerDataBase(new ConsoleLogger(), new DotNetJson());
+            PlayerDataBase dataBase = new PlayerDataBase(new DotNetJson());
             SticksNStonesMatch match = null;
 
             while (true){

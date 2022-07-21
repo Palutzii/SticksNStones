@@ -11,6 +11,7 @@ namespace SticksNStonesServer.Model;
 /// As well as both player's connections.
 /// </summary>
 public class SticksNStonesMatch{
+    readonly PlayerDataBase _playerDataBase;
     static int _id;
     public int Id{ get; }
     ClientConnection? Player1{ get; set; }
@@ -18,15 +19,16 @@ public class SticksNStonesMatch{
 
     readonly MatchInfo matchInfo = new();
 
-    public SticksNStonesMatch(){
+    public SticksNStonesMatch(PlayerDataBase playerDataBase){
+        _playerDataBase = playerDataBase;
         Id = ++_id;
     }
 
     public void InitPlayer1(TcpClient client){
-        Player1 = new ClientConnection(client,this,matchInfo.player1);
+        Player1 = new ClientConnection(client,this,matchInfo.player1, _playerDataBase);
     }
     public void InitPlayer2(TcpClient client){
-        Player2 = new ClientConnection(client,this,matchInfo.player2);
+        Player2 = new ClientConnection(client,this,matchInfo.player2, _playerDataBase);
     }
     
     /// <summary>

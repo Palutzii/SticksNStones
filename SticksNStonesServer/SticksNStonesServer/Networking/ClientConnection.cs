@@ -15,13 +15,15 @@ namespace SticksNStonesServer.Networking;
 public class ClientConnection{
     readonly SticksNStonesMatch _match;
     readonly PlayerInfo _playerInfo;
+    readonly PlayerDataBase _playerDataBase;
     public Connection Connection{ get; }
     
     
-    public ClientConnection(TcpClient client, SticksNStonesMatch match, PlayerInfo playerInfo){
+    public ClientConnection(TcpClient client, SticksNStonesMatch match, PlayerInfo playerInfo, PlayerDataBase playerDataBase){
         Connection = new Connection(new ConsoleLogger(), new DotNetJson(), client);
         _match = match;
         _playerInfo = playerInfo;
+        _playerDataBase = playerDataBase;
         Connection.Broker.Subscribe<LoginMessage>(OnLoginReceived);
         Connection.Broker.Subscribe<GainCoinMessage>(OnGainScoreReceived);
     }
@@ -34,6 +36,7 @@ public class ClientConnection{
     void OnLoginReceived(LoginMessage loginMessage){
         Console.WriteLine($"[#{_match.Id}] Player '{loginMessage.playerName}' logged in.");
         Connection.PlayerName = loginMessage.playerName;
+        _playerInfo.data = _playerDataBase.GetOrCreatePlayer(loginMessage.playerName);
         _playerInfo.data.name = loginMessage.playerName; 
         _playerInfo.isReady = true;
         _match.DistributeMatchInfo();

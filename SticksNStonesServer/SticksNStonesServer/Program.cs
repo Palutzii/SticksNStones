@@ -30,6 +30,7 @@ namespace SticksNStonesServer;
             var tcpListener = new TcpListener(IPAddress.Any, 12244);
             tcpListener.Start();
 
+            PlayerDataBase dataBase = new PlayerDataBase();
             SticksNStonesMatch match = null;
 
             while (true){
@@ -41,7 +42,7 @@ namespace SticksNStonesServer;
 
                 if (match == null){
                     Console.WriteLine("Starting new Match for Player. Waiting for Second Player");
-                    match = new SticksNStonesMatch();
+                    match = new SticksNStonesMatch(dataBase);
                     match.InitPlayer1(tcpClient);
                 }
                 else{

@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using StickNStonesShared.StickNStonesShared.Messages;
 using StickNStonesShared.StickNStonesShared.Model;
+using SticksNStonesServer.Interfaces;
 using SticksNStonesServer.Networking;
 
 namespace SticksNStonesServer.Model;
@@ -11,7 +12,7 @@ namespace SticksNStonesServer.Model;
 /// As well as both player's connections.
 /// </summary>
 public class SticksNStonesMatch{
-    readonly PlayerDataBase _playerDataBase;
+    readonly _iDatabase<PlayerData> _playerDataBase;
     static int _id;
     public int Id{ get; }
     ClientConnection? Player1{ get; set; }
@@ -19,7 +20,7 @@ public class SticksNStonesMatch{
 
     readonly MatchInfo matchInfo = new();
 
-    public SticksNStonesMatch(PlayerDataBase playerDataBase){
+    public SticksNStonesMatch(_iDatabase<PlayerData> playerDataBase){
         _playerDataBase = playerDataBase;
         Id = ++_id;
     }

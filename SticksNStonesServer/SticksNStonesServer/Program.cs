@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using SticksNStonesServer.Adapter;
+using SticksNStonesServer.Interfaces;
 using SticksNStonesServer.Model;
 
 namespace SticksNStonesServer;
@@ -30,7 +31,7 @@ namespace SticksNStonesServer;
             var tcpListener = new TcpListener(IPAddress.Any, 12244);
             tcpListener.Start();
 
-            PlayerDataBase dataBase = new PlayerDataBase(new DotNetJson());
+            _iDatabase<PlayerData> dataBase = new PlayerDataBase(new DotNetJson());
             SticksNStonesMatch match = null;
 
             while (true){

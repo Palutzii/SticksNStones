@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using StickNStonesShared.StickNStonesShared.Interfaces;
+using SticksNStonesServer.Interfaces;
 
 namespace SticksNStonesServer.Model;
 
@@ -11,8 +12,10 @@ namespace SticksNStonesServer.Model;
 ///
 ///  It can also retrieve Entities
 ///  It is persistent and saves each player to its individual File.
+///  CRUD Operations
+///  Create - Read - Update - Delete
 /// </summary>
-public class PlayerDataBase{
+public class PlayerDataBase : _iDatabase<PlayerData>{
     readonly IJson _json;
 
     public PlayerDataBase(IJson json){
@@ -23,25 +26,38 @@ public class PlayerDataBase{
     }
 
     static string GetFilePath(string playerName) => $"players/{playerName}.json";
+    
 
-    public PlayerData GetOrCreatePlayer(string playerName){
+    public PlayerData Create(string id){
+        throw new System.NotImplementedException();
+    }
+
+    public PlayerData ReadOrCreate(string id){
         // if the player exists, load him from the file
-        if (!File.Exists(GetFilePath(playerName))){
-            var jsonText = File.ReadAllText(GetFilePath(playerName));
+        if (!File.Exists(GetFilePath(id))){
+            var jsonText = File.ReadAllText(GetFilePath(id));
             return _json.Deserialize<PlayerData>(jsonText);
         }
         // else create a new player
         var data = new PlayerData{
-            name = playerName,
+            name = id,
             score = 0
         };
         // save him to disk
-        UpdatePlayer(data);
+        Update(id, data);
         // and return him
         return data;
     }
 
-    public void UpdatePlayer(PlayerData playerData){
-        File.WriteAllText($"players/{playerData.name}.json",_json.Serialize(playerData));
+    public PlayerData Read(string id){
+        throw new System.NotImplementedException();
+    }
+
+    public void Update(string id, PlayerData data){
+        File.WriteAllText($"players/{id}.json",_json.Serialize(data));
+    }
+
+    public void Delete(string id){
+        throw new System.NotImplementedException();
     }
 }

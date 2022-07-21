@@ -46,26 +46,38 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                         var streamReader = new StreamReader(Client.GetStream());
                         while (true){
                                 //block the reading thread until a whole line of information has arrived.
-                                string? json = streamReader.ReadLine();
-                                if (json == null){
-                                        continue;
-                                }
-                                var holder = _json.Deserialize<MessageBase>(json);
+                                try{
+                                        string? json = streamReader.ReadLine();
+                                        if (json == null){
+                                                continue;
+                                        }
 
-                                if (holder == null){
-                                        _logger.Log($"Invalid message received: {json}");
-                                        continue;
+                                        var holder = _json.Deserialize<MessageBase>(json);
+
+                                        if (holder == null){
+                                                _logger.Log($"[{Client.Client.RemoteEndPoint}] Invalid message received: {json}");
+                                                continue;
+                                        }
+
+                                        var type = AppDomain.CurrentDomain.GetAssemblies()
+                                                .Select(assembly => assembly.GetType(holder.type))
+                                                .SingleOrDefault(type => type != null);
+                                        if (type == null){
+                                                _logger.Log(
+                                                        $"[{Client.Client.RemoteEndPoint}] Unsupported Message of Type {holder.type} received. Ignoring.");
+                                                continue;
+                                        }
+
+                                        var message = _json.Deserialize(json, type) as MessageBase;
+                                        Broker.InvokeSubscribers(type, message);
+                                }
+                                catch (IOException e){
+                                        _logger.Log($"[{Client.Client.RemoteEndPoint}] {e}");
+                                        // player disconnected
+                                        // flag them as disconnected
+                                        // after a while : win per default for the other player
                                 }
                                 
-                                var type = AppDomain.CurrentDomain.GetAssemblies()
-                                        .Select(assembly => assembly.GetType(holder.type))
-                                        .SingleOrDefault(type => type != null);
-                                if (type == null){
-                                        _logger.Log($"Unsupported Message of Type {holder.type} received. Ignoring.");
-                                        continue;
-                                }
-                                var message = _json.Deserialize(json, type) as MessageBase;
-                                Broker.InvokeSubscribers(type, message);
                                 
                         }
                 }

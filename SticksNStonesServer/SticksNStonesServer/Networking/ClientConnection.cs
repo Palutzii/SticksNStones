@@ -30,6 +30,7 @@ public class ClientConnection{
 
     void OnGainScoreReceived(GainCoinMessage gainScore){
         _playerInfo.data.score++;
+        _playerDataBase.UpdatePlayer(_playerInfo.data);
         _match.DistributeMatchInfo();
     }
 

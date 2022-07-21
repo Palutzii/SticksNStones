@@ -27,14 +27,14 @@ public class ClientConnection{
     }
 
     void OnGainScoreReceived(GainCoinMessage gainScore){
-        _playerInfo.score++;
+        _playerInfo.data.score++;
         _match.DistributeMatchInfo();
     }
 
     void OnLoginReceived(LoginMessage loginMessage){
         Console.WriteLine($"[#{_match.Id}] Player '{loginMessage.playerName}' logged in.");
         Connection.PlayerName = loginMessage.playerName;
-        _playerInfo.name = loginMessage.playerName; 
+        _playerInfo.data.name = loginMessage.playerName; 
         _playerInfo.isReady = true;
         _match.DistributeMatchInfo();
     }

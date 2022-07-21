@@ -23,7 +23,7 @@ public class Game : MonoBehaviour{
     }
     
     void OnMatchInfoReceived(MatchInfoMessage message){
-            player1Score.text = message.matchInfo.player1.score.ToString();
-            player1Score.text = message.matchInfo.player2.score.ToString();
+            player1Score.text = message.matchInfo.player1.data.score.ToString();
+            player1Score.text = message.matchInfo.player2.data.score.ToString();
     }
 }

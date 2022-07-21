@@ -6,7 +6,6 @@ using SticksNStonesServer.Networking;
 
 namespace SticksNStonesServer.Model;
 
-
 /// <summary>
 /// Holds the Match info for a PVP Match.
 /// As well as both player's connections.

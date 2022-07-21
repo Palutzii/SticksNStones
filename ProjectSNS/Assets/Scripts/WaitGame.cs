@@ -20,11 +20,11 @@ public class WaitGame : MonoBehaviour{
     
     
     void OnMatchInfoReceived(MatchInfoMessage message){
-        if (!string.IsNullOrEmpty(message.matchInfo.player1.name)){
-            player1Name.text = message.matchInfo.player1.name;
+        if (!string.IsNullOrEmpty(message.matchInfo.player1.data.name)){
+            player1Name.text = message.matchInfo.player1.data.name;
         }
-        if (!string.IsNullOrEmpty(message.matchInfo.player2.name)){
-            player2Name.text = message.matchInfo.player2.name;
+        if (!string.IsNullOrEmpty(message.matchInfo.player2.data.name)){
+            player2Name.text = message.matchInfo.player2.data.name;
         }
 
         if (message.matchInfo.isStarted){

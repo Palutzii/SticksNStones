@@ -11,7 +11,7 @@ namespace Networking{
     public class ServerConnection : MonoBehaviour{
         static ServerConnection _instance;
 
-        Connection _connection;
+        public Connection Connection;
 
         public Broker Broker{ get; } = new();
 
@@ -34,10 +34,10 @@ namespace Networking{
         public void Connect(string playerName){
             var client = new TcpClient();
             client.Connect(IPAddress.Loopback, 12244);
-            this._connection = new Connection(new UnityLogger(), new UnityJson(), client);
-            this._connection.Broker.AnyMessageReceived += OnAnyMessageReceived;
-            this._connection.PlayerName = playerName;
-            this._connection.SendMessage(new LoginMessage{
+            this.Connection = new Connection(new UnityLogger(), new UnityJson(), client);
+            this.Connection.Broker.AnyMessageReceived += OnAnyMessageReceived;
+            this.Connection.PlayerName = playerName;
+            this.Connection.SendMessage(new LoginMessage{
                 playerName = playerName
             });
         }

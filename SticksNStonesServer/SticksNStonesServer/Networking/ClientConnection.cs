@@ -10,25 +10,28 @@ namespace SticksNStonesServer.Networking;
 
 /// <summary>
 /// Contains all code for one player's connection
-/// Use <see cref="SendMessage{T}"/> to send a Message to this Player.
-/// The class waits for incoming Messages on a seperate Thread.
+/// The class waits for incoming Messages on a separate Thread.
 /// </summary>
 public class ClientConnection{
     readonly SticksNStonesMatch _match;
     readonly PlayerInfo _playerInfo;
     public Connection Connection{ get; }
-
-
-    // see, what code can be shared between client and server
-    // and  what code is individual to each other
+    
+    
     public ClientConnection(TcpClient client, SticksNStonesMatch match, PlayerInfo playerInfo){
         Connection = new Connection(new ConsoleLogger(), new DotNetJson(), client);
         _match = match;
         _playerInfo = playerInfo;
-        Connection.Broker.Subscribe<LoginMessage>(OnMessageReceived);
+        Connection.Broker.Subscribe<LoginMessage>(OnLoginReceived);
+        Connection.Broker.Subscribe<GainCoinMessage>(OnGainScoreReceived);
     }
 
-    void OnMessageReceived(LoginMessage loginMessage){
+    void OnGainScoreReceived(GainCoinMessage gainScore){
+        _playerInfo.score++;
+        _match.DistributeMatchInfo();
+    }
+
+    void OnLoginReceived(LoginMessage loginMessage){
         Console.WriteLine($"[#{_match.Id}] Player '{loginMessage.playerName}' logged in.");
         Connection.PlayerName = loginMessage.playerName;
         _playerInfo.name = loginMessage.playerName; 

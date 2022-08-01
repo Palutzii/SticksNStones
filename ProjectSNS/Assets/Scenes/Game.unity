@@ -2488,10 +2488,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11864b0cbafbefa419670ee891922748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 15
+  playerSpeed: 8
   jumpHeight: 1
   gravityValue: -9.81
-  rotationSpeed: 10
+  rotationSpeed: 20
   arrowPrefab: {fileID: 8172089718288793031, guid: 7fca1ffd465814843a8822b5ab184fae, type: 3}
   firePoint: {fileID: 1395566862}
   arrowParent: {fileID: 1924144821}
@@ -2746,7 +2746,7 @@ GameObject:
   - component: {fileID: 1395566862}
   m_Layer: 0
   m_Name: FirePoint
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2913,7 +2913,7 @@ GameObject:
   - component: {fileID: 2136394438}
   m_Layer: 0
   m_Name: Crossbow
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

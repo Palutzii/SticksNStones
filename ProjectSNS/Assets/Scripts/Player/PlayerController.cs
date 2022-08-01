@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotationSpeed = 10f;
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] Transform firePoint;
-    [SerializeField] Transform firePointParent;
+    [SerializeField] Transform arrowParent;
+    [SerializeField] float arrowHitMissDistance = 25f;
     Transform _camTransform;
     CharacterController _controller;
     InputAction _jumpAction;
@@ -32,6 +33,8 @@ public class PlayerController : MonoBehaviour
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
         _shootAction = _playerInput.actions["Shoot"];
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -68,9 +71,15 @@ public class PlayerController : MonoBehaviour
 
     void ShootBow(){
         RaycastHit hit;
+        var arrow = Instantiate(arrowPrefab, firePoint.position, Quaternion.identity, arrowParent);
+        var arrowController = arrow.GetComponent<ArrowController>();
         if (Physics.Raycast(_camTransform.position, _camTransform.forward, out hit, Mathf.Infinity)){
-            var arrow =
-                Instantiate(arrowPrefab, firePoint.position, Quaternion.identity, firePointParent);
+            arrowController.target = hit.point;
+            arrowController.hit = true;
+        }
+        else{
+            arrowController.target = _camTransform.position + _camTransform.forward * arrowHitMissDistance;
+            arrowController.hit = false;
         }
     }
 }

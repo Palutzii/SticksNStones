@@ -1,9 +1,11 @@
+using Interface;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
+    [SerializeField] int health;
     [SerializeField] float playerSpeed = 2f;
     [SerializeField] float jumpHeight = 1f;
     [SerializeField] float gravityValue = -9.81f;
@@ -11,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] Transform firePoint;
     [SerializeField] Transform arrowParent;
-    [SerializeField] float arrowHitMissDistance = 25f;
+    [SerializeField] float arrowHitMissDistance = 100f;
     Transform _camTransform;
     CharacterController _controller;
     InputAction _jumpAction;
@@ -39,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
 
     void Update(){
+        
         // Checking if player is grounded
         groundedPlayer = _controller.isGrounded;
         if (groundedPlayer && _playerVelocity.y < 0) _playerVelocity.y = 0f;
@@ -67,6 +70,16 @@ public class PlayerController : MonoBehaviour
 
     void OnDisable(){
         _shootAction.performed -= _ => ShootBow();
+    }
+
+    public int Health{
+        get => health;
+        set => health = value;
+    }
+
+
+    public void Damage(int damageAmount){
+        Debug.Log($"damaged by {damageAmount}");
     }
 
     void ShootBow(){

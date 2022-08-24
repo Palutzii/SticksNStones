@@ -31,7 +31,7 @@ namespace StickNStonesShared.StickNStonesShared.Networking{
                         _logger = logger;
                         _json = json;
                         Client = client;
-                        this._streamWriter = new StreamWriter(client.GetStream());
+                        this._streamWriter = new StreamWriter(client.GetStream(),System.Text.Encoding.UTF8,10000);
                         new Thread(ReceiveMessages).Start();
                 }
                 public void SendMessage<TMessage>(TMessage message)

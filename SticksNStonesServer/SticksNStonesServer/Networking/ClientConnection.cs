@@ -28,6 +28,20 @@ public class ClientConnection{
         _playerDataBase = playerDataBase;
         Connection.Broker.Subscribe<LoginMessage>(OnLoginReceived);
         Connection.Broker.Subscribe<GainCoinMessage>(OnGainScoreReceived);
+        Connection.Broker.Subscribe<MatchInfoMessage>(OnMatchInfoMessageReceived);
+        Connection.Broker.Subscribe<PositionUpdateMessage>(OnPositionUpdateMessageReceived);
+    }
+
+    void OnPositionUpdateMessageReceived(PositionUpdateMessage obj){
+        _playerInfo.data.positionX = obj.x;
+        _playerInfo.data.positionY = obj.y;
+        _playerInfo.data.positionZ = obj.z;
+        // TODO: Switch to vector 3
+        _match.DistributeMatchInfo();
+    }
+
+    void OnMatchInfoMessageReceived(MatchInfoMessage obj){
+        // Need matchInfoMessage from client to update server position value
     }
 
     void OnGainScoreReceived(GainCoinMessage gainScore){
@@ -44,4 +58,6 @@ public class ClientConnection{
         _playerInfo.isReady = true;
         _match.DistributeMatchInfo();
     }
+    
+    
 }

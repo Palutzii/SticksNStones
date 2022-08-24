@@ -1,4 +1,6 @@
 using Interface;
+using Networking;
+using StickNStonesShared.StickNStonesShared.Messages;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,7 +43,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 
     void Update(){
-        
         // Checking if player is grounded
         groundedPlayer = _controller.isGrounded;
         if (groundedPlayer && _playerVelocity.y < 0) _playerVelocity.y = 0f;
@@ -62,6 +63,12 @@ public class PlayerController : MonoBehaviour, IDamageable
         // Rotate towards camera direction.
         var targetRotation = Quaternion.Euler(0, _camTransform.eulerAngles.y, 0);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    void FixedUpdate(){
+        ServerConnection.Instance.Connection.SendMessage(new PositionUpdateMessage(
+            ServerConnection.Instance.Connection.PlayerName,
+            transform.position.x, transform.position.y, transform.position.z));
     }
 
     void OnEnable(){

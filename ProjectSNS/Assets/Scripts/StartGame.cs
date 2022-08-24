@@ -1,17 +1,14 @@
-using System.Net;
-using System.Net.Sockets;
 using Networking;
-using StickNStonesShared.StickNStonesShared.Networking;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
-public class StartGame : MonoBehaviour{
+public class StartGame : MonoBehaviour
+{
+    public static string LocalPlayerName;
     public TMP_InputField playerNameInput;
-    
+
     public void OnClick(){
-        
         ServerConnection.Instance.Connect(playerNameInput.text);
         SceneManager.LoadScene("Wait");
     }
